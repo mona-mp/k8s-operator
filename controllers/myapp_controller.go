@@ -1,18 +1,4 @@
-/*
-Copyright 2022.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
 
 package controllers
 
@@ -23,7 +9,7 @@ import (
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-
+	appsv1 "k8s.io/api/apps/v1"
 	appsv1alpha1 "k8s-operator/api/v1alpha1"
 )
 
@@ -47,9 +33,37 @@ type MyappReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.2/pkg/reconcile
 func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	log := log.FromContext(ctx).WithValues("Myapp", req.NamespacedName)
 
-	// TODO(user): your logic here
+	// Fetch the Myapp instance
+	instance := &appsv1alpha1.Myapp{}
+	err := r.Get(context.TODO(), req.NamespacedName, instance)
+	if err != nil {
+		if errors.IsNotFound(err) {
+			// Request object not found, could have been deleted after reconcile request.
+			// Owned objects are automatically garbage collected. For additional cleanup logic use finalizers.
+			// Return and don't requeue
+			return reconcile.Result{}, nil
+		}
+		// Error reading the object - requeue the request.
+		return reconcile.Result{}, err
+	}
+
+	var result *reconcile.Result
+
+	// Check if this Deployment already exists
+	found := &appsv1.Deployment{}
+	err = r.Get(context.TODO(), types.NamespacedName{Name: instance.Name, Namespace: instance.Namespace}, found)
+
+	result, err = r.ensureDeployment(req, instance, r.backendDeployment(instance))
+	if result != nil {
+		log.Error(err, "Deployment Not ready")
+		return *result, err
+	}
+
+	// Deployment and Service already exists - don't requeue
+	log.Info("Skip reconcile: Deployment and service already exists",
+		"Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)
 
 	return ctrl.Result{}, nil
 }
