@@ -56,9 +56,9 @@ func (r *MyappReconciler) ensureDeployment(request reconcile.Request,
 
 // backendDeployment is a code for Creating Deployment
 func (r *MyappReconciler) backendDeployment(v *appsv1alpha1.Myapp) *appsv1.Deployment {
-	a := corev1.PersistentVolumeClaimVolumeSource{
-		ClaimName: v.Spec.Name + "-pvc",
-	}
+	// a := corev1.PersistentVolumeClaimVolumeSource{
+	// 	ClaimName: v.Spec.Name + "-pvc",
+	// }
 
 	labels := labels(v)
 	size := int32(1)
