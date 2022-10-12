@@ -5,7 +5,6 @@ import (
 
 	appsv1alpha1 "k8s-operator/api/v1alpha1"
 
-	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -21,7 +20,7 @@ func (r *MyappReconciler) ensureSecret(request reconcile.Request,
 ) (*reconcile.Result, error) {
 
 	// See if Secret already exists and create if it doesn't
-	found := &appsv1.Deployment{}
+	found := &corev1.Secret{}
 	err := r.Get(context.TODO(), types.NamespacedName{
 		Name:      secret.Name,
 		Namespace: instance.Namespace,
