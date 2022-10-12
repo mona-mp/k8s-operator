@@ -1,16 +1,17 @@
-
-
 package controllers
 
 import (
 	"context"
+	appsv1alpha1 "k8s-operator/api/v1alpha1"
 
+	appsv1 "k8s.io/api/apps/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/log"
-	appsv1 "k8s.io/api/apps/v1"
-	appsv1alpha1 "k8s-operator/api/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
 // MyappReconciler reconciles a Myapp object
