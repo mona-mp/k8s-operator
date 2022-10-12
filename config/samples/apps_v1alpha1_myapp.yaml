@@ -1,0 +1,6 @@
+apiVersion: apps.my.domain/v1alpha1
+kind: Myapp
+metadata:
+  name: myapp-sample
+spec:
+  # TODO(user): Add fields here
