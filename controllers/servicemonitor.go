@@ -19,19 +19,19 @@ import (
 // ensureSvcMonitor ensures SvcMonitor is Running in a namespace.
 func (r *MyappReconciler) ensureSvcMonitor(request reconcile.Request,
 	instance *appsv1alpha1.Myapp,
-	secret *monitoring.ServiceMonitor,
+	svcmonitor *monitoring.ServiceMonitor,
 ) (*reconcile.Result, error) {
 
 	// See if SvcMonitor already exists and create if it doesn't
 	found := &appsv1.Deployment{}
 	err := r.Get(context.TODO(), types.NamespacedName{
-		Name:      secret.Name,
+		Name:      svcmonitor.Name,
 		Namespace: instance.Namespace,
 	}, found)
 	if err != nil && errors.IsNotFound(err) {
 
 		// Create the SvcMonitor
-		err = r.Create(context.TODO(), secret)
+		err = r.Create(context.TODO(), svcmonitor)
 
 		if err != nil {
 			// SvcMonitor creation failed
