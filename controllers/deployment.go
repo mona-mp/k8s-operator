@@ -86,10 +86,10 @@ func (r *MyappReconciler) backendDeployment(v *appsv1alpha1.Myapp) *appsv1.Deplo
 							Name:          v.Spec.Portname,
 						}},
 						Env: v.Spec.Envs,
-						VolumeMounts: []corev1.VolumeMount{{
-							Name:      v.Spec.Name + "-storage",
-							MountPath: "/mnt/data",
-						}},
+						// VolumeMounts: []corev1.VolumeMount{{
+						// 	Name:      v.Spec.Name + "-storage",
+						// 	MountPath: "/mnt/data",
+						// }},
 					}},
 					// ImagePullSecrets: []corev1.LocalObjectReference{{Name: v.Spec.Name + "-imgsecret"}},
 					// Volumes: []corev1.Volume{{
