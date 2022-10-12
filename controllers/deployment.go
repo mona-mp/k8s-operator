@@ -91,7 +91,7 @@ func (r *MyappReconciler) backendDeployment(v *appsv1alpha1.Myapp) *appsv1.Deplo
 						// 	MountPath: "/mnt/data",
 						// }},
 					}},
-					// ImagePullSecrets: []corev1.LocalObjectReference{{Name: v.Spec.Name + "-imgsecret"}},
+					ImagePullSecrets: []corev1.LocalObjectReference{{Name: v.Spec.Name + "-imgsecret"}},
 					// Volumes: []corev1.Volume{{
 					// 	Name: v.Spec.Name + "-storage",
 					// 	VolumeSource: corev1.VolumeSource{

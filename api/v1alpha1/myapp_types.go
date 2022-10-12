@@ -53,6 +53,8 @@ type MyappSpec struct {
 	Secretkey string `json:"secretkey,omitempty"`
 	// Secret value
 	Secretvalue string `json:"secretvalue,omitempty"`
+	// Imagepullsecret dockerconfig json
+	Dockerconfigjson string `json:"dockerconfigjson,omitempty"`
 }
 
 // MyappStatus defines the observed state of Myapp
