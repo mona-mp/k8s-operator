@@ -18,7 +18,9 @@ func labels(v *appsv1alpha1.Myapp) map[string]string {
 	// Fetches and sets labels
 
 	return map[string]string{
-		"app": v.Spec.Name,
+		"app":                        v.Spec.Name,
+		"app.kubernetes.io/instance": v.Spec.Name,
+		"app.kubernetes.io/name":     v.Spec.Name,
 	}
 }
 

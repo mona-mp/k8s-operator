@@ -58,6 +58,9 @@ func (r *MyappReconciler) backendSvcMonitor(v *appsv1alpha1.Myapp) *monitoring.S
 			Endpoints: []monitoring.Endpoint{{
 				Port: v.Spec.Name,
 			}},
+			Selector: metav1.LabelSelector{
+				MatchLabels: labels(v),
+			},
 		},
 	}
 
