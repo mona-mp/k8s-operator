@@ -2,10 +2,8 @@ package controllers
 
 import (
 	"context"
-	"fmt"
 	appsv1alpha1 "k8s-operator/api/v1alpha1"
 
-	"gopkg.in/yaml.v2"
 	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -106,8 +104,6 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	// Create SVCmonitor
 	if instance.Spec.Servicemonitorenable {
 		result, err = r.ensureSvcMonitor(req, instance, r.backendSvcMonitor(instance))
-		yamlData, err := yaml.Marshal(&instance)
-		fmt.Println(string(yamlData))
 		if result != nil {
 			log.Error(err, "Servicemonitor Not ready")
 			return *result, err
