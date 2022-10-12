@@ -102,13 +102,13 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	}
 
 	// Create SVCmonitor
-	// if instance.Spec.Servicemonitorenable {
-	// 	result, err = r.ensureSvcMonitor(req, instance, r.backendSvcMonitor(instance))
-	// 	if result != nil {
-	// 		log.Error(err, "Servicemonitor Not ready")
-	// 		return *result, err
-	// 	}
-	// }
+	if instance.Spec.Servicemonitorenable {
+		result, err = r.ensureSvcMonitor(req, instance, r.backendSvcMonitor(instance))
+		if result != nil {
+			log.Error(err, "Servicemonitor Not ready")
+			return *result, err
+		}
+	}
 
 	// Deployment and Service already exists - don't requeue
 	log.Info("Skip reconcile: Deployment and service already exists",
