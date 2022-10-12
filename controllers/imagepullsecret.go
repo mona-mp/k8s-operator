@@ -16,19 +16,19 @@ import (
 // ensureSecret ensures ImageSecret is Running in a namespace.
 func (r *MyappReconciler) ensureImgSecret(request reconcile.Request,
 	instance *appsv1alpha1.Myapp,
-	secret *corev1.Secret,
+	imgsecret *corev1.Secret,
 ) (*reconcile.Result, error) {
 
 	// See if ImageSecret already exists and create if it doesn't
 	found := &appsv1.Deployment{}
 	err := r.Get(context.TODO(), types.NamespacedName{
-		Name:      secret.Name,
+		Name:      imgsecret.Name,
 		Namespace: instance.Namespace,
 	}, found)
 	if err != nil && errors.IsNotFound(err) {
 
 		// Create the ImageSecret
-		err = r.Create(context.TODO(), secret)
+		err = r.Create(context.TODO(), imgsecret)
 
 		if err != nil {
 			// ImageSecret creation failed
