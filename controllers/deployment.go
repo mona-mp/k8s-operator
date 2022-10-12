@@ -63,7 +63,7 @@ func (r *MyappReconciler) backendDeployment(v *appsv1alpha1.Myapp) *appsv1.Deplo
 	var volumemounts []corev1.VolumeMount
 	if v.Spec.Pvcenable {
 		volume = []corev1.Volume{{
-			Name: v.Spec.Name,
+			Name: v.Spec.Name + "-storage",
 			VolumeSource: corev1.VolumeSource{
 				PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
 					ClaimName: a.ClaimName,
