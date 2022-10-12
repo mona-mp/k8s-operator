@@ -39,7 +39,10 @@ type MyappSpec struct {
 	Portnumber int32 `json:"portnumber"`
 	// Environment variables
 	Envs []corev1.EnvVar `json:"envs,omitempty"`
-
+	// Service type
+	Servicetype string `json:"servicetype,omitempty"`
+	// Service Nodeposr
+	Servicenodeport int32 `json:"servicenodeport,omitempty"`
 }
 
 // MyappStatus defines the observed state of Myapp

@@ -62,6 +62,13 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		return *result, err
 	}
 
+	// Check if this Service already exists
+	result, err = r.ensureService(req, instance, r.backendService(instance))
+	if result != nil {
+		log.Error(err, "Service Not ready")
+		return *result, err
+	}
+
 	// Deployment and Service already exists - don't requeue
 	log.Info("Skip reconcile: Deployment and service already exists",
 		"Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)
