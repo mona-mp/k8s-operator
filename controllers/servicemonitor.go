@@ -8,7 +8,6 @@ import (
 
 	monitoring "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	"gopkg.in/yaml.v2"
-	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -23,7 +22,7 @@ func (r *MyappReconciler) ensureSvcMonitor(request reconcile.Request,
 ) (*reconcile.Result, error) {
 
 	// See if SvcMonitor already exists and create if it doesn't
-	found := &appsv1.Deployment{}
+	found := &monitoring.ServiceMonitor{}
 	err := r.Get(context.TODO(), types.NamespacedName{
 		Name:      svcmonitor.Name,
 		Namespace: instance.Namespace,
