@@ -78,6 +78,13 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 		}
 	}
 
+	// Check if this Secret already exists
+	result, err = r.ensureSecret(req, instance, r.backendSecret(instance))
+	if result != nil {
+		log.Error(err, "Secret Not ready")
+		return *result, err
+	}
+
 	// Deployment and Service already exists - don't requeue
 	log.Info("Skip reconcile: Deployment and service already exists",
 		"Deployment.Namespace", found.Namespace, "Deployment.Name", found.Name)

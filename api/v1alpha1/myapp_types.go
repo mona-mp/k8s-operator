@@ -49,6 +49,10 @@ type MyappSpec struct {
 	Ingresshost string `json:"ingresshost"`
 	// Ingress enable
 	Ingressenable bool `json:"ingressenable"`
+	// Secret key
+	Secretkey string `json:"secretkey,omitempty"`
+	// Secret value
+	Secretvalue string `json:"secretvalue,omitempty"`
 }
 
 // MyappStatus defines the observed state of Myapp
