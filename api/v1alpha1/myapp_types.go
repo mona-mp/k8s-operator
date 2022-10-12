@@ -59,6 +59,8 @@ type MyappSpec struct {
 	Storageclass string `json:"storageclass,omitempty"`
 	// PVC storage resource
 	Pvcstorage string `json:"pvcstorage,omitempty"`
+	// PVCenable
+	Pvcenable bool `json:"pvcenable,omitempty"`
 	// SVCmonitor enable
 	Servicemonitorenable bool `json:"servicemonitorenable,omitempty"`
 }
