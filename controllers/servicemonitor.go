@@ -50,7 +50,9 @@ func (r *MyappReconciler) ensureSvcMonitor(request reconcile.Request,
 func (r *MyappReconciler) backendSvcMonitor(v *appsv1alpha1.Myapp) *monitoring.ServiceMonitor {
 
 	svcmonitor := &monitoring.ServiceMonitor{
+
 		TypeMeta: metav1.TypeMeta{
+			Kind:       "ServiceMonitor",
 			APIVersion: "monitoring.coreos.com/v1",
 		},
 		ObjectMeta: metav1.ObjectMeta{
