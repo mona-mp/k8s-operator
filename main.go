@@ -33,6 +33,8 @@ import (
 
 	appsv1alpha1 "k8s-operator/api/v1alpha1"
 	"k8s-operator/controllers"
+
+	monitoring "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -46,6 +48,9 @@ func init() {
 
 	utilruntime.Must(appsv1alpha1.AddToScheme(scheme))
 	//+kubebuilder:scaffold:scheme
+
+	// add monitoring to scheme
+	utilruntime.Must(monitoring.AddToScheme(scheme))
 }
 
 func main() {
