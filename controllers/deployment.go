@@ -56,9 +56,9 @@ func (r *MyappReconciler) ensureDeployment(request reconcile.Request,
 
 // backendDeployment is a code for Creating Deployment
 func (r *MyappReconciler) backendDeployment(v *appsv1alpha1.Myapp) *appsv1.Deployment {
-	// a := corev1.PersistentVolumeClaimVolumeSource{
-	// 	ClaimName: v.Spec.Name + "-pvc",
-	// }
+	a := corev1.PersistentVolumeClaimVolumeSource{
+		ClaimName: v.Spec.Name + "-pvc",
+	}
 
 	labels := labels(v)
 	size := int32(1)
@@ -86,20 +86,20 @@ func (r *MyappReconciler) backendDeployment(v *appsv1alpha1.Myapp) *appsv1.Deplo
 							Name:          v.Spec.Portname,
 						}},
 						Env: v.Spec.Envs,
-						// VolumeMounts: []corev1.VolumeMount{{
-						// 	Name:      v.Spec.Name + "-storage",
-						// 	MountPath: "/mnt/data",
-						// }},
+						VolumeMounts: []corev1.VolumeMount{{
+							Name:      v.Spec.Name + "-storage",
+							MountPath: v.Spec.MountPath,
+						}},
 					}},
 					ImagePullSecrets: []corev1.LocalObjectReference{{Name: v.Spec.Name + "-imgsecret"}},
-					// Volumes: []corev1.Volume{{
-					// 	Name: v.Spec.Name + "-storage",
-					// 	VolumeSource: corev1.VolumeSource{
-					// 		PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
-					// 			ClaimName: a.ClaimName,
-					// 		},
-					// 	},
-					// }},
+					Volumes: []corev1.Volume{{
+						Name: v.Spec.Name + "-storage",
+						VolumeSource: corev1.VolumeSource{
+							PersistentVolumeClaim: &corev1.PersistentVolumeClaimVolumeSource{
+								ClaimName: a.ClaimName,
+							},
+						},
+					}},
 				},
 			},
 		},

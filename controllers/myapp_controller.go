@@ -52,6 +52,27 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 
 	var result *reconcile.Result
 
+	// Check if this PVC already exists
+	result, err = r.ensurePersistentVolumeClaim(req, instance, r.backendPersistentVolumeClaim(instance))
+	if result != nil {
+		log.Error(err, "PVC Not ready")
+		return *result, err
+	}
+
+	// Check if this Secret already exists
+	result, err = r.ensureSecret(req, instance, r.backendSecret(instance))
+	if result != nil {
+		log.Error(err, "Secret Not ready")
+		return *result, err
+	}
+
+	// Check if this ImgSecret already exists
+	result, err = r.ensureImgSecret(req, instance, r.backendImgSecret(instance))
+	if result != nil {
+		log.Error(err, "ImgSecret Not ready")
+		return *result, err
+	}
+
 	// Check if this Deployment already exists
 	found := &appsv1.Deployment{}
 	err = r.Get(context.TODO(), types.NamespacedName{Name: instance.Name, Namespace: instance.Namespace}, found)
@@ -76,20 +97,6 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 			log.Error(err, "Ingress Not ready")
 			return *result, err
 		}
-	}
-
-	// Check if this Secret already exists
-	result, err = r.ensureSecret(req, instance, r.backendSecret(instance))
-	if result != nil {
-		log.Error(err, "Secret Not ready")
-		return *result, err
-	}
-
-	// Check if this Secret already exists
-	result, err = r.ensureImgSecret(req, instance, r.backendImgSecret(instance))
-	if result != nil {
-		log.Error(err, "ImgSecret Not ready")
-		return *result, err
 	}
 
 	// Deployment and Service already exists - don't requeue

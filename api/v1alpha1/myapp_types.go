@@ -39,6 +39,8 @@ type MyappSpec struct {
 	Portnumber int32 `json:"portnumber"`
 	// Environment variables
 	Envs []corev1.EnvVar `json:"envs,omitempty"`
+	// Container volume mountpath
+	MountPath string `json:"volumemountpath,omitempty"`
 	// Service type
 	Servicetype string `json:"servicetype,omitempty"`
 	// Service Nodeposr
@@ -55,6 +57,10 @@ type MyappSpec struct {
 	Secretvalue string `json:"secretvalue,omitempty"`
 	// Imagepullsecret dockerconfig json
 	Dockerconfigjson string `json:"dockerconfigjson,omitempty"`
+	// StorageClass name
+	Storageclass string `json:"storageclass,omitempty"`
+	// PVC storage resource
+	Pvcstorage string `json:"pvcstorage,omitempty"`
 }
 
 // MyappStatus defines the observed state of Myapp
