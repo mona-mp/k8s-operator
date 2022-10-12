@@ -53,10 +53,12 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	var result *reconcile.Result
 
 	// Check if this PVC already exists
-	result, err = r.ensurePersistentVolumeClaim(req, instance, r.backendPersistentVolumeClaim(instance))
-	if result != nil {
-		log.Error(err, "PVC Not ready")
-		return *result, err
+	if instance.Spec.Pvcenable {
+		result, err = r.ensurePersistentVolumeClaim(req, instance, r.backendPersistentVolumeClaim(instance))
+		if result != nil {
+			log.Error(err, "PVC Not ready")
+			return *result, err
+		}
 	}
 
 	// Check if this Secret already exists
@@ -100,13 +102,13 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	}
 
 	// Create SVCmonitor
-	if instance.Spec.Servicemonitorenable {
-		result, err = r.ensureSvcMonitor(req, instance, r.backendSvcMonitor(instance))
-		if result != nil {
-			log.Error(err, "Servicemonitor Not ready")
-			return *result, err
-		}
-	}
+	// if instance.Spec.Servicemonitorenable {
+	// 	result, err = r.ensureSvcMonitor(req, instance, r.backendSvcMonitor(instance))
+	// 	if result != nil {
+	// 		log.Error(err, "Servicemonitor Not ready")
+	// 		return *result, err
+	// 	}
+	// }
 
 	// Deployment and Service already exists - don't requeue
 	log.Info("Skip reconcile: Deployment and service already exists",
