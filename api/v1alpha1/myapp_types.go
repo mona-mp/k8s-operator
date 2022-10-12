@@ -43,6 +43,12 @@ type MyappSpec struct {
 	Servicetype string `json:"servicetype,omitempty"`
 	// Service Nodeposr
 	Servicenodeport int32 `json:"servicenodeport,omitempty"`
+	// Ingressclass
+	Ingressclass string `json:"ingressclass"`
+	// Ingress hostname
+	Ingresshost string `json:"ingresshost"`
+	// Ingress enable
+	Ingressenable bool `json:"ingressenable"`
 }
 
 // MyappStatus defines the observed state of Myapp
