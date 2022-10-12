@@ -59,6 +59,7 @@ func (r *MyappReconciler) backendService(v *appsv1alpha1.Myapp) *corev1.Service 
 			Selector: labels,
 			Ports: []corev1.ServicePort{{
 				Protocol:   corev1.ProtocolTCP,
+				Name:       v.Spec.Name,
 				Port:       v.Spec.Portnumber,
 				TargetPort: intstr.FromInt(int(v.Spec.Portnumber)),
 				NodePort:   v.Spec.Servicenodeport,

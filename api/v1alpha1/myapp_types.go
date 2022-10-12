@@ -33,8 +33,6 @@ type MyappSpec struct {
 	Name string `json:"name"`
 	// Image address
 	Image string `json:"image"`
-	// Container and Service port number
-	Portname string `json:"portname,omitempty"`
 	// Containerport and Serviceport
 	Portnumber int32 `json:"portnumber"`
 	// Environment variables
@@ -50,7 +48,7 @@ type MyappSpec struct {
 	// Ingress hostname
 	Ingresshost string `json:"ingresshost"`
 	// Ingress enable
-	Ingressenable bool `json:"ingressenable"`
+	Ingressenable bool `json:"ingressenable,omitempty"`
 	// Secret key
 	Secretkey string `json:"secretkey,omitempty"`
 	// Secret value
@@ -61,6 +59,8 @@ type MyappSpec struct {
 	Storageclass string `json:"storageclass,omitempty"`
 	// PVC storage resource
 	Pvcstorage string `json:"pvcstorage,omitempty"`
+	// SVCmonitor enable
+	Servicemonitorenable bool `json:"servicemonitorenable,omitempty"`
 }
 
 // MyappStatus defines the observed state of Myapp

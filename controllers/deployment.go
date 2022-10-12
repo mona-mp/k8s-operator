@@ -83,7 +83,7 @@ func (r *MyappReconciler) backendDeployment(v *appsv1alpha1.Myapp) *appsv1.Deplo
 						Name:            v.Spec.Name,
 						Ports: []corev1.ContainerPort{{
 							ContainerPort: v.Spec.Portnumber,
-							Name:          v.Spec.Portname,
+							Name:          v.Spec.Name,
 						}},
 						Env: v.Spec.Envs,
 						VolumeMounts: []corev1.VolumeMount{{
