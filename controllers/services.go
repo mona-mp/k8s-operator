@@ -2,8 +2,10 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	appsv1alpha1 "k8s-operator/api/v1alpha1"
 
+	"gopkg.in/yaml.v2"
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -69,5 +71,7 @@ func (r *MyappReconciler) backendService(v *appsv1alpha1.Myapp) *corev1.Service 
 	}
 
 	controllerutil.SetControllerReference(v, service, r.Scheme)
+	yamlData, _ := yaml.Marshal(&service)
+	fmt.Println(string(yamlData))
 	return service
 }
