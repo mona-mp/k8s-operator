@@ -17,6 +17,7 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -28,8 +29,34 @@ type MyappSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Myapp. Edit myapp_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	// Myapp Name
+	Name string `json:"name"`
+	// Image address
+	Image string `json:"image"`
+	// Container and Service port number
+	Portname string `json:"portname,omitempty"`
+	// Containerport and Serviceport
+	Portnumber int32 `json:"portnumber"`
+	// Environment variables
+	Envs []corev1.EnvVar `json:"envs,omitempty"`
+	// Service type
+	Servicetype string `json:"servicetype,omitempty"`
+	// Service Nodeposr
+	Servicenodeport int32 `json:"servicenodeport,omitempty"`
+	// Ingressclass
+	// Ingressclass string `json:"ingressclass"`
+	// // Ingress hostname
+	// Ingresshost string `json:"ingresshost"`
+	// // Secret key
+	// Secretkey string `json:"secretkey,omitempty"`
+	// // Secret value
+	// Secretvalue string `json:"secretvalue,omitempty"`
+	// // Ingress enable
+	// Ingressenable bool `json:"ingressenable"`
+	// // StorageClass name
+	// Storageclass string `json:"storageclass,omitempty"`
+	// // PVC storage resource
+	// Pvcstorage string `json:"pvcstorage,omitempty"`
 }
 
 // MyappStatus defines the observed state of Myapp
