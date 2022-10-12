@@ -4,7 +4,6 @@ import (
 	"context"
 	appsv1alpha1 "k8s-operator/api/v1alpha1"
 
-	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/api/resource"
@@ -21,7 +20,7 @@ func (r *MyappReconciler) ensurePersistentVolumeClaim(request reconcile.Request,
 ) (*reconcile.Result, error) {
 
 	// See if persistentvolumeclaim already exists and create if it doesn't
-	found := &appsv1.Deployment{}
+	found := &corev1.PersistentVolumeClaim{}
 	err := r.Get(context.TODO(), types.NamespacedName{
 		Name:      pvc.Name,
 		Namespace: instance.Namespace,

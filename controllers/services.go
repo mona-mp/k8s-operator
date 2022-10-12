@@ -6,7 +6,6 @@ import (
 	appsv1alpha1 "k8s-operator/api/v1alpha1"
 
 	"gopkg.in/yaml.v2"
-	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -23,7 +22,7 @@ func (r *MyappReconciler) ensureService(request reconcile.Request,
 ) (*reconcile.Result, error) {
 
 	// See if service already exists and create if it doesn't
-	found := &appsv1.Deployment{}
+	found := &corev1.Service{}
 	err := r.Get(context.TODO(), types.NamespacedName{
 		Name:      service.Name,
 		Namespace: instance.Namespace,

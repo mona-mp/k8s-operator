@@ -3,7 +3,6 @@ package controllers
 import (
 	"context"
 
-	appsv1 "k8s.io/api/apps/v1"
 	networkingv1 "k8s.io/api/networking/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -23,7 +22,7 @@ func (r *MyappReconciler) ensureIngress(request reconcile.Request,
 ) (*reconcile.Result, error) {
 
 	// See if Ingress already exists and create if it doesn't
-	found := &appsv1.Deployment{}
+	found := &networkingv1.Ingress{}
 	err := r.Get(context.TODO(), types.NamespacedName{
 		Name:      ingress.Name,
 		Namespace: instance.Namespace,
