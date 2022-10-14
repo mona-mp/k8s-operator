@@ -63,7 +63,7 @@ func (r *MyappReconciler) backendDeployment(v *appsv1alpha1.Myapp) *appsv1.Deplo
 	}
 	var volume []corev1.Volume
 	var volumemounts []corev1.VolumeMount
-	if v.Spec.Pvcenable {
+	if len(v.Spec.Pvcstorage) > 0 {
 		volume = []corev1.Volume{{
 			Name: v.Spec.Name + "-storage",
 			VolumeSource: corev1.VolumeSource{
