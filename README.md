@@ -138,8 +138,8 @@ The controller checks if these values are set, it calls ensureIngress() and back
 #### PersistentVolumeClaim
 To have a PVC for the application, these values are required :
 ```yaml
-  MountPath: <mountPatg> #where to mount this pvc in the pod
-  Pvcstorage: <storage-size> #like 5Gi
+  volumemountpath: <mountPatg> #where to mount this pvc in the pod
+  pvcstorage: <storage-size> #like 5Gi
 ```
 If they are set, the PVC will create.
 In the deployment,  the Spec.Container.VolumeMounts and Spec.Volume will add to the deployment structure.
@@ -153,8 +153,8 @@ To create this object, just set the ``servicemonitorenable`` like below:
 #### Secret and ImagepullSecret
 If the application need secret, define the Secret key and value in the manifest :
 ```yaml
-  Secretkey: <secret-key>
-  Secretvalue: <secret-value>
+  secretkey: <secret-key>
+  secretvalue: <secret-value>
 ```
 Create imagepullsecret for dockerhub  by passing the dockerconfigjson like below:
 ```yaml
@@ -184,4 +184,7 @@ Or navigate to the **~/go/src/k8s-operator/config/crd/bases** and execute this c
 kubectl apply -f .
 ```
 You can see that the Myapp CRD has been created.
+<p align="center">
+    <img src="images/crd.png">
+    </p>
 
