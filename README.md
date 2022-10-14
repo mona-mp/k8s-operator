@@ -299,3 +299,73 @@ kubectl apply -f nginx-myapp.yaml
     <img src="images/app-sample.png">
     </p>
 
+## challenges :
+
+- To create a service monitor for the application, this error has occurred:
+```bash
+ERROR Reconciler error {"controller": "myapp",
+ "controllerGroup": "apps.my.domain", "controllerKind": "Myapp",
+  "myapp": {"name":"myapp-instance","namespace":"default"},
+"namespace": "default", "name": "myapp-instance",
+"reconcileID": "b6f9fa65-7fb8-4796-a275-b57ec7c6a36e",
+ "error": "no kind is registered for the
+  type v1.ServiceMonitor in scheme \"pkg/runtime/scheme.go:100\""}
+```
+It was challenging to solve, so I asked about it in `StackOverflow` and got helpful answers.
+Also, this [link](https://www.henryxieblogs.com/2019/08/errorno-kind-is-registered-in-scheme.html) helped too.
+Finally, it was solved by adding `monitoring/v1` to the `scheme` in `main.go`:
+```go
+```go
+import (
+    "os"
+    ctrl "sigs.k8s.io/controller-runtime"
+    monitoring "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
+    "k8s.io/apimachinery/pkg/runtime"
+)
+
+var (
+    scheme = runtime.NewScheme()
+)
+
+func init() {
+    monitoring.AddToScheme(scheme)
+}
+```
+- When deploying the myapp-controller deployment, the error about its permissions to the cluster and resources had shown, so I found that I did not create a serviceaccount for it, and it caused the problem.
+This problem was resolved by creating the serviceaccount and binding it to the cluster-admin role.
+```yaml
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: service-account-rolebinding
+  namespace: default
+subjects:
+  - kind: ServiceAccount
+    name: service-account-admin
+    namespace: default
+roleRef:
+  kind: ClusterRole
+  name: cluster-admin
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: service-account-admin
+  namespace: default
+```
+
+
+- To use `make`, I had not installed it, so when I wanted to use it, I got errors. Installing it resolved the problem:
+```bash
+apt install make
+```
+- When running the controller and using ``make install``I got  this error :
+ ```bash
+usr/local/go/src/net/cgo_linux.go:12:8: no such package located this error resolve by installing gcc.
+```
+It was solved by installing the gcc:
+```bash
+apt install gcc
+```
