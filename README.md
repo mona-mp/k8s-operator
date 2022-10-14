@@ -94,3 +94,94 @@ With these commands, some files create, so what each of them does?
 - main.go: The central point of entry to the operator contains the main function.
 - controllers/myapp_controller.go: The main logic of the operator goes here.
 - API/v1alpha1/myapp_types.go: Contains the structure for the custom resource.
+
+#### Download the dependencies
+Use the `tidy` module to remove dependencies we do not need and the `init` module to consolidate packages.
+```bash
+go mod init
+go mod tidy
+```
+### Part 3: Implement the Operator Logic
+When the below CRD is applied, the operator (controller) should create a deployment of Myapp kind with the objects defined in the yaml.
+This instance must create a deployment and service for our application, and other objects can be added in the yaml to create, like ingress, secret, PVC, and service monitor.
+#### How does each object create?
+For each of them, there are two functions:
+- ensure[resourcename]: Like ensureService(), ensures Service resource presence in given namespace.
+- backend[resourcename]: Like backendService(), it is a code for creating a Secret and setting its required values which are given in the Myapp deployment.
+
+In the myapp_controller.go, the controller knows the existence of each object. It does this through edits to the reconciliation loop function of the  `myapp_controller.go`  file.
+
+#### Deployment and service
+By applying the manifest of the kind Myapp, automatically, the deployment of your application and service for it will deploy, so you have to set some values for them. The required values for deployment and service are like that:
+```yaml
+kind: Myapp
+metadata:
+  name: <name>
+spec:
+  name: <app-name> #required
+  image: <app-image> #required
+  portnumber: <app-port>  #it uses for the container port and svc port and svc targetport
+  envs:
+    - name: <env-name>
+      value: <env-value>
+  servicetype: <type-of-svc> #default= cluster-IP.
+  servicenodeport: <node-port> #if servicetype is NodePort you can define it
+```
+#### Ingress
+If the application needs to have an ingress,  add these values to the spec of the above manifest:
+```yaml
+  ingresshost: <host-name>
+  ingressclass: <ingressclass-name>
+```
+The controller checks if these values are set, it calls ensureIngress() and backendIngress() functions to create and connect it to the service.
+
+#### PersistentVolumeClaim
+To have a PVC for the application, these values are required :
+```yaml
+  MountPath: <mountPatg> #where to mount this pvc in the pod
+  Pvcstorage: <storage-size> #like 5Gi
+```
+If they are set, the PVC will create.
+In the deployment,  the Spec.Container.VolumeMounts and Spec.Volume will add to the deployment structure.
+
+#### ServiceMonitor
+To create this object, just set the ``servicemonitorenable`` like below:
+```yaml
+  servicemonitorenable: true
+```
+
+#### Secret and ImagepullSecret
+If the application need secret, define the Secret key and value in the manifest :
+```yaml
+  Secretkey: <secret-key>
+  Secretvalue: <secret-value>
+```
+Create imagepullsecret for dockerhub  by passing the dockerconfigjson like below:
+```yaml
+  dockerconfigjson: `{"auths":{"https://index.docker.io/v1/":{"username":"<your-username>","password":"<your-pass>","email":"<your-email>","auth":"<auth-value>"}}}`
+```
+**Notes:**
+- To set this value as a string(not map) in the yaml file, you must put it in` `` ` .
+ - For the `auth-value`  create a string like `your-username:your-pass` and encode it with base64 algorithms.
+- To set `dockerconfigjson` you can use the configuration in `.docker/config.json` .
+
+### Part4:Generating CRDs
+Go to the root of the project and generate the CRDs with the command below:
+```bash
+make manifest
+```
+It will generate the CRDs for us in this location:
+
+**~/go/src/k8s-operator/config/crd/bases**
+
+### Part 5: Installing the CRDs
+There are two ways to register our custom kind schema (`Myapp` in this case) within our Kubernetes cluster. First use `make` :
+```bash
+make install
+```
+Or navigate to the **~/go/src/k8s-operator/config/crd/bases** and execute this command:
+```bash
+kubectl apply -f .
+```
+You can see that the Myapp CRD has been created.
+
