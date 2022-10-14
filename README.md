@@ -58,7 +58,7 @@ Import the operator-sdk release GPG key from  `keyserver.ubuntu.com`:
 gpg --keyserver keyserver.ubuntu.com --recv-keys 052996E2A20B5C7E
 ```
 Download the checksums file and its signature, then verify the signature:
-"`bash
+```bash
 curl -LO ${OPERATOR_SDK_DL_URL}/checksums.txt
 curl -LO ${OPERATOR_SDK_DL_URL}/checksums.txt.asc
 gpg -u "Operator SDK (release) <cncf-operator-sdk@cncf.io>" --verify checksums.txt.asc
