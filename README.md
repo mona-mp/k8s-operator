@@ -188,3 +188,114 @@ You can see that the Myapp CRD has been created.
     <img src="images/crd.png">
     </p>
 
+### Part6: Spin up the controller
+There are two ways to run the controller. For the first one,  navigate to the **~/go/src/k8s-operator/** and build the controller image :
+```bash
+docker login
+docker build  -t monamp10/myapp-controller:1.7.0 .
+docker push -t monamp10/myapp-controller:1.7.0
+```
+After that, deploy it as deployment in the Kubernetes cluster.
+**myapp-controller.yaml:**
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: <controller-name>
+  labels:
+    app: <controller-name>
+spec:
+  selector:
+    matchLabels:
+      app: <controller-name>
+  template:
+    metadata:
+      labels:
+        app: <controller-name>
+    spec:
+      containers:
+      - name: <controller-name>
+        image: <controller-image> #in my case is "monamp10/myapp-controller:1.7.0"
+        ports:
+          - name: metrics
+            containerPort: 8080
+          - name: health-probe
+            containerPort: 8081
+      imagePullSecrets:
+      - name: <secret-name>
+      serviceAccount: service-account-admin
+```
+
+Alternatively, run the controller in the terminal:
+```bash
+make run
+```
+<p align="center">
+    <img src="images/make-run.png">
+    </p>
+
+### Run the operator in the cluster
+Here is an example of using this operator to deploy the Nginx application.
+It needs deployment, service, persistentvolumeclaim, ingress, and service monitor.
+First, you need to have access to a k8s cluster.
+Create the controller with the myapp-controller.yaml:
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp-controller
+  labels:
+    app: myapp-controller
+spec:
+  selector:
+    matchLabels:
+      app: myapp-controller
+  template:
+    metadata:
+      labels:
+        app: myapp-controller
+    spec:
+      containers:
+      - name: myapp-controller
+        image: monamp10/myapp-controller:1.7.0
+        ports:
+          - name: metrics
+            containerPort: 8080
+          - name: health-probe
+            containerPort: 8081
+      serviceAccount: service-account-admin
+```
+Create the controller:
+```bash
+kubectl apply -f myapp-controller.yaml
+```
+<p align="center">
+    <img src="images/myapp-controller.png">
+    </p>
+
+Create the manifest of Myapp kind and give all the values the Nginx app needs. Like below:
+```yaml
+apiVersion: apps.my.domain/v1alpha1
+kind: Myapp
+metadata:
+  name: myapp-instance
+spec:
+  name: nginx
+  image: nginx:1.23.1
+  portnumber: 80
+  envs:
+    - name: NGINX_HOST
+      value: 80
+  volumemountpath: /var/log/nginx/error_log
+  ingressclass: nginx
+  storageclass: manual
+  servicemonitorenable: true
+```
+Create the Myapp resource:
+```bash
+kubectl apply -f nginx-myapp.yaml
+```
+<p align="center">
+    <img src="images/app-sample.png">
+    </p>
+
