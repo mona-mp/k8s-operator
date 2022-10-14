@@ -47,8 +47,7 @@ type MyappSpec struct {
 	Ingressclass string `json:"ingressclass"`
 	// Ingress hostname
 	Ingresshost string `json:"ingresshost"`
-	// Ingress enable
-	Ingressenable bool `json:"ingressenable,omitempty"`
+
 	// Secret key
 	Secretkey string `json:"secretkey,omitempty"`
 	// Secret value

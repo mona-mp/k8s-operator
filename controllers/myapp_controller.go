@@ -93,7 +93,7 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	}
 
 	// Create Ingress
-	if instance.Spec.Ingressenable {
+	if len(instance.Spec.Ingresshost) > 0 {
 		result, err = r.ensureIngress(req, instance, r.backendIngress(instance))
 		if result != nil {
 			log.Error(err, "Ingress Not ready")
