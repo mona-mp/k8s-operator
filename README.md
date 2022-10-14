@@ -93,7 +93,7 @@ With these commands, some files create, so what each of them does?
 - Makefile: Contains all the necessary commands to generate the artifacts for the operator.
 - main.go: The central point of entry to the operator contains the main function.
 - controllers/myapp_controller.go: The main logic of the operator goes here.
-- API/v1alpha1/myapp_types.go: Contains the structure for the custom resource.
+- api/v1alpha1/myapp_types.go: Contains the structure for the custom resource.
 
 #### Download the dependencies
 Use the `tidy` module to remove dependencies we do not need and the `init` module to consolidate packages.

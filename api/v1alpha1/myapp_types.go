@@ -41,7 +41,7 @@ type MyappSpec struct {
 	MountPath string `json:"volumemountpath,omitempty"`
 	// Service type
 	Servicetype string `json:"servicetype,omitempty"`
-	// Service Nodeposr
+	// Service Nodeport
 	Servicenodeport int32 `json:"servicenodeport,omitempty"`
 	// Ingressclass
 	Ingressclass string `json:"ingressclass,omitempty"`

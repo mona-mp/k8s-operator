@@ -2,12 +2,10 @@ package controllers
 
 import (
 	"context"
-	"fmt"
 
 	appsv1alpha1 "k8s-operator/api/v1alpha1"
 
 	monitoring "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
-	"gopkg.in/yaml.v2"
 	"k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
@@ -69,7 +67,5 @@ func (r *MyappReconciler) backendSvcMonitor(v *appsv1alpha1.Myapp) *monitoring.S
 	}
 
 	controllerutil.SetControllerReference(v, svcmonitor, r.Scheme)
-	yamlData, _ := yaml.Marshal(&svcmonitor)
-	fmt.Println(string(yamlData))
 	return svcmonitor
 }
