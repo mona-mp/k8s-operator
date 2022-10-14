@@ -28,7 +28,7 @@ There are different ways to create an operator. I would choose the framework Ope
 #### Prerequisites
 The following softwares are required for creating the operator in this way:
 - go to version 1.18
-"`bash
+```bash
 sudo apt update && sudo apt upgrade
 sudo apt install wget software-properties-common apt-transport-HTTPS -y
 wget https://golang.org/dl/go1.18.linux-amd64.tar.gz
@@ -38,18 +38,18 @@ source /etc/profile.d/go.sh
 ```
 
 - gpg‍‍‍‍
-"`bash
+```bash
 sudo apt install gpg
 ```
 - operator-SDK
 
 Set platform information:
-"`bash
+```bash
 export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
 export OS=$(uname | awk '{print tolower($0)}')
 ```
 Download the binary for your platform:
-"`bash
+```bash
 export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/download/v1.24.0
 curl -LO ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
 ```
@@ -64,28 +64,28 @@ curl -LO ${OPERATOR_SDK_DL_URL}/checksums.txt.asc
 gpg -u "Operator SDK (release) <cncf-operator-sdk@cncf.io>" --verify checksums.txt.asc
 ```
 Make sure the checksums match:
-"`bash
+```bash
 grep operator-sdk_${OS}_${ARCH} checksums.txt | sha256sum -c -
 ```
 The output should be like this:
-"`console
+```console
 operator-sdk_linux_amd64: OK
 ```
 Install the binary in the PATH:
-"`bash
+```bash
 chmod +x operator-sdk_${OS}_${ARCH} && sudo mv operator-sdk_${OS}_${ARCH} /usr/local/bin/operator-SDK
 ```
 
 #### Init the project
 Now it is time to use the [Operator SDK](https://sdk.operatorframework.io/) to create the project structure.
-"`bash
+```bash
 cd go/src/
 mkdir k8s-operator && cd k8s-operator
 operator-SDK init
 ```
 #### Create the API and the Controller
 With the below command, the API and the controller are created:
-"`bash
+```bash
 operator-SDK create --version v1alpha1 --kind Myapp --resource --controller
 ```
 With these commands, some files create, so what each of them does?
