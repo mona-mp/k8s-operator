@@ -44,9 +44,9 @@ type MyappSpec struct {
 	// Service Nodeposr
 	Servicenodeport int32 `json:"servicenodeport,omitempty"`
 	// Ingressclass
-	Ingressclass string `json:"ingressclass"`
+	Ingressclass string `json:"ingressclass,omitempty"`
 	// Ingress hostname
-	Ingresshost string `json:"ingresshost"`
+	Ingresshost string `json:"ingresshost,omitempty "`
 
 	// Secret key
 	Secretkey string `json:"secretkey,omitempty"`
