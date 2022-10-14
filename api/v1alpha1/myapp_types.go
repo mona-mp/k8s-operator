@@ -47,7 +47,6 @@ type MyappSpec struct {
 	Ingressclass string `json:"ingressclass,omitempty"`
 	// Ingress hostname
 	Ingresshost string `json:"ingresshost,omitempty"`
-
 	// Secret key
 	Secretkey string `json:"secretkey,omitempty"`
 	// Secret value
@@ -58,8 +57,6 @@ type MyappSpec struct {
 	Storageclass string `json:"storageclass,omitempty"`
 	// PVC storage resource
 	Pvcstorage string `json:"pvcstorage,omitempty"`
-	// PVCenable
-	Pvcenable bool `json:"pvcenable,omitempty"`
 	// SVCmonitor enable
 	Servicemonitorenable bool `json:"servicemonitorenable,omitempty"`
 }

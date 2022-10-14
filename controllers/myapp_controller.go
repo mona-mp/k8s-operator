@@ -53,7 +53,7 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	var result *reconcile.Result
 
 	// Check if this PVC already exists
-	if instance.Spec.Pvcenable {
+	if len(instance.Spec.Pvcstorage) > 0 {
 		result, err = r.ensurePersistentVolumeClaim(req, instance, r.backendPersistentVolumeClaim(instance))
 		if result != nil {
 			log.Error(err, "PVC Not ready")
