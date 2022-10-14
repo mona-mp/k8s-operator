@@ -62,17 +62,21 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	}
 
 	// Check if this Secret already exists
-	result, err = r.ensureSecret(req, instance, r.backendSecret(instance))
-	if result != nil {
-		log.Error(err, "Secret Not ready")
-		return *result, err
+	if len(instance.Spec.Secretkey) > 0 {
+		result, err = r.ensureSecret(req, instance, r.backendSecret(instance))
+		if result != nil {
+			log.Error(err, "Secret Not ready")
+			return *result, err
+		}
 	}
 
 	// Check if this ImgSecret already exists
-	result, err = r.ensureImgSecret(req, instance, r.backendImgSecret(instance))
-	if result != nil {
-		log.Error(err, "ImgSecret Not ready")
-		return *result, err
+	if len(instance.Spec.Dockerconfigjson) > 0 {
+		result, err = r.ensureImgSecret(req, instance, r.backendImgSecret(instance))
+		if result != nil {
+			log.Error(err, "ImgSecret Not ready")
+			return *result, err
+		}
 	}
 
 	// Check if this Deployment already exists
