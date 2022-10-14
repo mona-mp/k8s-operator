@@ -1,94 +1,96 @@
-# k8s-operator
-// TODO(user): Add simple overview of use/purpose
+# k8s-Operator
 
-## Description
-// TODO(user): An in-depth paragraph about your project and overview of use
+This project is a simple Kubernetes operator to deploy an application (like API) and create every object that this app needs, like service, ingress, persistentvolumeclaim, and secret.
+To do this project, first read about these concepts were explained briefly below:
 
-## Getting Started
-You’ll need a Kubernetes cluster to run against. You can use [KIND](https://sigs.k8s.io/kind) to get a local cluster for testing, or run against a remote cluster.
-**Note:** Your controller will automatically use the current context in your kubeconfig file (i.e. whatever cluster `kubectl cluster-info` shows).
+### What is an Operator in Kubernetes?
 
-### Running on the cluster
-1. Install Instances of Custom Resources:
+Operators are software extensions to Kubernetes that use [custom resources](https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/) to manage applications and their components.
 
-```sh
-kubectl apply -f config/samples/
+### What is CRD?
+
+The [CustomResourceDefinition](https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/) API resource allows you to define custom resources. Defining a CRD object creates a new custom resource with a name and schema you specify. The Kubernetes API serves and handles the storage of your custom resource.
+
+## Create an Operator
+
+I divided the project into the following parts :
+
+### Part1:  Create a Kubernetes cluster
+
+This cluster has one master and two workers. The cluster has been initialized via  `kubeadm` and used to test and deploy this operator.
+This process has been automated via the following ansible:
+
+[HA-KubernetesCluster-Ansible](https://github.com/mona-mp/HA-K8sCluster-ansible)
+
+### Part 2: Creating the Operator Project
+There are different ways to create an operator. I would choose the framework Operator-SDK because it is easier to use, and the documentation is easy to read. The Operator SDK is a framework that uses the [controller-runtime](https://github.com/kubernetes-sigs/controller-runtime) library to make writing operators.
+
+#### Prerequisites
+The following softwares are required for creating the operator in this way:
+- go to version 1.18
+"`bash
+sudo apt update && sudo apt upgrade
+sudo apt install wget software-properties-common apt-transport-HTTPS -y
+wget https://golang.org/dl/go1.18.linux-amd64.tar.gz
+sudo  tar -zxvf go1.18.linux-amd64.tar.gz -C /usr/local/
+echo  "export PATH=/usr/local/go/bin:${PATH}"  |  sudo  tee /etc/profile.d/go.sh
+source /etc/profile.d/go.sh
 ```
 
-2. Build and push your image to the location specified by `IMG`:
-	
-```sh
-make docker-build docker-push IMG=<some-registry>/k8s-operator:tag
+- gpg‍‍‍‍
+"`bash
+sudo apt install gpg
 ```
-	
-3. Deploy the controller to the cluster with the image specified by `IMG`:
+- operator-SDK
 
-```sh
-make deploy IMG=<some-registry>/k8s-operator:tag
+Set platform information:
+"`bash
+export ARCH=$(case $(uname -m) in x86_64) echo -n amd64 ;; aarch64) echo -n arm64 ;; *) echo -n $(uname -m) ;; esac)
+export OS=$(uname | awk '{print tolower($0)}')
 ```
-
-### Uninstall CRDs
-To delete the CRDs from the cluster:
-
-```sh
-make uninstall
+Download the binary for your platform:
+"`bash
+export OPERATOR_SDK_DL_URL=https://github.com/operator-framework/operator-sdk/releases/download/v1.24.0
+curl -LO ${OPERATOR_SDK_DL_URL}/operator-sdk_${OS}_${ARCH}
 ```
-
-### Undeploy controller
-UnDeploy the controller to the cluster:
-
-```sh
-make undeploy
+Import the operator-sdk release GPG key from  `keyserver.ubuntu.com`:
+```bash
+gpg --keyserver keyserver.ubuntu.com --recv-keys 052996E2A20B5C7E
 ```
-
-## Contributing
-// TODO(user): Add detailed information on how you would like others to contribute to this project
-
-### How it works
-This project aims to follow the Kubernetes [Operator pattern](https://kubernetes.io/docs/concepts/extend-kubernetes/operator/)
-
-It uses [Controllers](https://kubernetes.io/docs/concepts/architecture/controller/) 
-which provides a reconcile function responsible for synchronizing resources untile the desired state is reached on the cluster 
-
-### Test It Out
-1. Install the CRDs into the cluster:
-
-```sh
-make install
+Download the checksums file and its signature, then verify the signature:
+"`bash
+curl -LO ${OPERATOR_SDK_DL_URL}/checksums.txt
+curl -LO ${OPERATOR_SDK_DL_URL}/checksums.txt.asc
+gpg -u "Operator SDK (release) <cncf-operator-sdk@cncf.io>" --verify checksums.txt.asc
+```
+Make sure the checksums match:
+"`bash
+grep operator-sdk_${OS}_${ARCH} checksums.txt | sha256sum -c -
+```
+The output should be like this:
+"`console
+operator-sdk_linux_amd64: OK
+```
+Install the binary in the PATH:
+"`bash
+chmod +x operator-sdk_${OS}_${ARCH} && sudo mv operator-sdk_${OS}_${ARCH} /usr/local/bin/operator-SDK
 ```
 
-2. Run your controller (this will run in the foreground, so switch to a new terminal if you want to leave it running):
-
-```sh
-make run
+#### Init the project
+Now it is time to use the [Operator SDK](https://sdk.operatorframework.io/) to create the project structure.
+"`bash
+cd go/src/
+mkdir k8s-operator && cd k8s-operator
+operator-SDK init
 ```
-
-**NOTE:** You can also run this in one step by running: `make install run`
-
-### Modifying the API definitions
-If you are editing the API definitions, generate the manifests such as CRs or CRDs using:
-
-```sh
-make manifests
+#### Create the API and the Controller
+With the below command, the API and the controller are created:
+"`bash
+operator-SDK create --version v1alpha1 --kind Myapp --resource --controller
 ```
+With these commands, some files create, so what each of them does?
 
-**NOTE:** Run `make --help` for more information on all potential `make` targets
-
-More information can be found via the [Kubebuilder Documentation](https://book.kubebuilder.io/introduction.html)
-
-## License
-
-Copyright 2022.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-
+- Makefile: Contains all the necessary commands to generate the artifacts for the operator.
+- main.go: The central point of entry to the operator contains the main function.
+- controllers/myapp_controller.go: The main logic of the operator goes here.
+- API/v1alpha1/myapp_types.go: Contains the structure for the custom resource.
