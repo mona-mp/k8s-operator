@@ -51,7 +51,7 @@ func (r *MyappReconciler) backendImgSecret(v *appsv1alpha1.Myapp) *corev1.Secret
 
 	userdata := v.Spec.Dockerusername + ":" + v.Spec.Dockerpassword
 	auth := b64.StdEncoding.EncodeToString([]byte(userdata))
-	auths := "{\"auths\":{\"https://index.docker.io/v1/\":{\"username\":\"" + v.Spec.Dockerusername + "\",\"password\":\"" + v.Spec.Dockerpassword + "\",\"email\":\"" + v.Spec.Dockeremail + "\",\"auth\":\"" + auth + "\"}}}"
+	auths := "\"{\"auths\":{\"https://index.docker.io/v1/\":{\"username\":\"" + v.Spec.Dockerusername + "\",\"password\":\"" + v.Spec.Dockerpassword + "\",\"email\":\"" + v.Spec.Dockeremail + "\",\"auth\":\"" + auth + "\"}}}\""
 	dockerconfigjson := b64.StdEncoding.EncodeToString([]byte(auths))
 	Data := make(map[string][]byte)
 	key := ".dockerconfigjson"
