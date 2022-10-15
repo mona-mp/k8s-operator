@@ -59,6 +59,12 @@ type MyappSpec struct {
 	Pvcstorage string `json:"pvcstorage,omitempty"`
 	// SVCmonitor enable
 	Servicemonitorenable bool `json:"servicemonitorenable,omitempty"`
+	// docker username
+	Dockerusername string `json:"dockerusername,omitempty"`
+	// docker password
+	Dockerpassword string `json:"dockerpassword,omitempty"`
+	// docker email
+	Dockeremail string `json:"dockeremail,omitempty"`
 }
 
 // MyappStatus defines the observed state of Myapp
