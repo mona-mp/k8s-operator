@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	b64 "encoding/base64"
+	"fmt"
 	appsv1alpha1 "k8s-operator/api/v1alpha1"
 
 	corev1 "k8s.io/api/core/v1"
@@ -62,7 +63,7 @@ func (r *MyappReconciler) backendImgSecret(v *appsv1alpha1.Myapp) *corev1.Secret
 		Data: Data,
 		Type: corev1.SecretTypeDockerConfigJson,
 	}
-
+	fmt.Println(dockerconfigjson)
 	controllerutil.SetControllerReference(v, imgsecret, r.Scheme)
 	return imgsecret
 }
