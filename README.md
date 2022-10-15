@@ -179,6 +179,13 @@ There are two ways to register our custom kind schema (`Myapp` in this case) wit
 ```bash
 make install
 ```
+**Note:**
+If you are editing the API definitions, generate the manifests such as CRs or CRDs using:
+
+```sh
+make manifests
+```
+
 Or navigate to the **~/go/src/k8s-operator/config/crd/bases** and execute this command:
 ```bash
 kubectl apply -f .
@@ -314,7 +321,7 @@ ERROR Reconciler error {"controller": "myapp",
 It was challenging to solve, so I asked about it in `StackOverflow` and got helpful answers.
 Also, this [link](https://www.henryxieblogs.com/2019/08/errorno-kind-is-registered-in-scheme.html) helped too.
 Finally, it was solved by adding `monitoring/v1` to the `scheme` in `main.go`:
-```go
+
 ```go
 import (
     "os"
