@@ -54,15 +54,15 @@ func (r *MyappReconciler) backendImgSecret(v *appsv1alpha1.Myapp) *corev1.Secret
 	auth := b64.StdEncoding.EncodeToString([]byte(userdata))
 	auths := "\"{\"auths\":{\"https://index.docker.io/v1/\":{\"username\":\"" + v.Spec.Dockerusername + "\",\"password\":\"" + v.Spec.Dockerpassword + "\",\"email\":\"" + v.Spec.Dockeremail + "\",\"auth\":\"" + auth + "\"}}}\""
 	dockerconfigjson := b64.StdEncoding.EncodeToString([]byte(auths))
-	Data := make(map[string][]byte)
+	Data := make(map[string]string)
 	key := ".dockerconfigjson"
-	Data[key] = []byte(dockerconfigjson)
+	Data[key] = dockerconfigjson
 	imgsecret := &corev1.Secret{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      v.Spec.Name + "-imgsecret",
 			Namespace: v.Namespace},
-		Data: Data,
-		Type: corev1.SecretTypeDockerConfigJson,
+		StringData: Data,
+		Type:       corev1.SecretTypeDockerConfigJson,
 	}
 	controllerutil.SetControllerReference(v, imgsecret, r.Scheme)
 	yamlData, _ := yaml.Marshal(&imgsecret)
