@@ -107,7 +107,7 @@ This instance must create a deployment and service for our application, and othe
 #### How does each object create?
 For each of them, there are two functions:
 - ensure[resourcename]: Like ensureService(), ensures Service resource presence in given namespace.
-- backend[resourcename]: Like backendService(), it is a code for creating a Secret and setting its required values which are given in the Myapp deployment.
+- backend[resourcename]: Like backendService(), it is a code for creating a Service and setting its required values which are given in the Myapp deployment.
 
 In the myapp_controller.go, the controller knows the existence of each object. It does this through edits to the reconciliation loop function of the  `myapp_controller.go`  file.
 
