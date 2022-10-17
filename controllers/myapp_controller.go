@@ -71,7 +71,7 @@ func (r *MyappReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	}
 
 	// Check if this ImgSecret already exists
-	if len(instance.Spec.Dockerconfigjson) > 0 {
+	if len(instance.Spec.Dockerpassword) > 0 {
 		result, err = r.ensureImgSecret(req, instance, r.backendImgSecret(instance))
 		if result != nil {
 			log.Error(err, "ImgSecret Not ready")
